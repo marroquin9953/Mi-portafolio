@@ -5,7 +5,7 @@ let iconoMenu = document.getElementById('icono');
 
 let estadoM = false;
 
-// Templates
+// Barra de menu
 const templateMenu = `
 <div class="padre">
     <div>
