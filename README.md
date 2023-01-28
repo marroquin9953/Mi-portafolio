@@ -10,4 +10,4 @@ _HTML, Sass, JavaScript_
 
 ## Creador✒
 
-* **Robert Romero** 
+* **Isidro Alexander Marroquin** 
