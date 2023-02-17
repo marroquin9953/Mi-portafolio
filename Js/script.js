@@ -65,7 +65,7 @@ const alerta = document.getElementById('alerta')
 
 var mensajeHTML = `
     <div class="alert alert-danger" role="alert">
-        Llena todoos los campos.
+        Llena todos los campos.
     </div>
 `;
 
