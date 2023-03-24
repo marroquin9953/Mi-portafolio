@@ -1460,3 +1460,7 @@ footer .divFooter div a ion-icon {
   color: rgba(255, 255, 255, 0.3);
 }
 /*# sourceMappingURL=main.css.map */
+
+p {
+    text-align: justify;
+}
