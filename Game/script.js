@@ -20,7 +20,7 @@ adjustForMobile();
 // getting bird element properties
 let bird_props = bird.getBoundingClientRect();
 
-// This method returns DOMReact -> top, right, bottom, left, x, y, width and height
+// This method returns DOMRect -> top, right, bottom, left, x, y, width, and height
 let background = document.querySelector('.background').getBoundingClientRect();
 
 let score_val = document.querySelector('.score_val');
@@ -31,45 +31,59 @@ let game_state = 'Start';
 img.style.display = 'none';
 message.classList.add('messageStyle');
 
-document.addEventListener('keydown', (e) => {
-    
-    if(e.key == 'Enter' && game_state != 'Play'){
-        document.querySelectorAll('.pipe_sprite').forEach((e) => {
-            e.remove();
-        });
-        img.style.display = 'block';
-        bird.style.top = '40vh';
-        game_state = 'Play';
-        message.innerHTML = '';
-        score_title.innerHTML = 'Score : ';
-        score_val.innerHTML = '0';
-        message.classList.remove('messageStyle');
-        play();
+// Función para iniciar el juego
+function startGame() {
+    document.querySelectorAll('.pipe_sprite').forEach((e) => {
+        e.remove();
+    });
+    img.style.display = 'block';
+    bird.style.top = '40vh';
+    game_state = 'Play';
+    message.innerHTML = '';
+    score_title.innerHTML = 'Score : ';
+    score_val.innerHTML = '0';
+    message.classList.remove('messageStyle');
+    play();
+}
+
+// Evento de clic en la pantalla para iniciar el juego en dispositivos táctiles
+document.addEventListener('click', () => {
+    if (game_state !== 'Play') {
+        startGame();
     }
 });
 
-function play(){
-    function move(){
-        if(game_state != 'Play') return;
+// Evento de tecla Enter para iniciar el juego en computadoras
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'Enter' && game_state !== 'Play') {
+        startGame();
+    }
+});
+
+// lol...
+
+function play() {
+    function move() {
+        if (game_state != 'Play') return;
 
         let pipe_sprite = document.querySelectorAll('.pipe_sprite');
         pipe_sprite.forEach((element) => {
             let pipe_sprite_props = element.getBoundingClientRect();
             bird_props = bird.getBoundingClientRect();
 
-            if(pipe_sprite_props.right <= 0){
+            if (pipe_sprite_props.right <= 0) {
                 element.remove();
-            }else{
-                if(bird_props.left < pipe_sprite_props.left + pipe_sprite_props.width && bird_props.left + bird_props.width > pipe_sprite_props.left && bird_props.top < pipe_sprite_props.top + pipe_sprite_props.height && bird_props.top + bird_props.height > pipe_sprite_props.top){
+            } else {
+                if (bird_props.left < pipe_sprite_props.left + pipe_sprite_props.width && bird_props.left + bird_props.width > pipe_sprite_props.left && bird_props.top < pipe_sprite_props.top + pipe_sprite_props.height && bird_props.top + bird_props.height > pipe_sprite_props.top) {
                     game_state = 'End';
                     message.innerHTML = 'Game Over'.fontcolor('red') + '<br>Press Enter To Restart';
                     message.classList.add('messageStyle');
                     img.style.display = 'none';
                     sound_die.play();
                     return;
-                }else{
-                    if(pipe_sprite_props.right < bird_props.left && pipe_sprite_props.right + move_speed >= bird_props.left && element.increase_score == '1'){
-                        score_val.innerHTML =+ score_val.innerHTML + 1;
+                } else {
+                    if (pipe_sprite_props.right < bird_props.left && pipe_sprite_props.right + move_speed >= bird_props.left && element.increase_score == '1') {
+                        score_val.innerHTML = +score_val.innerHTML + 1;
                         sound_point.play();
                     }
                     element.style.left = pipe_sprite_props.left - move_speed + 'px';
@@ -81,23 +95,23 @@ function play(){
     requestAnimationFrame(move);
 
     let bird_dy = 0;
-    function apply_gravity(){
-        if(game_state != 'Play') return;
+    function apply_gravity() {
+        if (game_state != 'Play') return;
         bird_dy = bird_dy + grativy;
         document.addEventListener('keydown', (e) => {
-            if(e.key == 'ArrowUp' || e.key == ' '){
+            if (e.key == 'ArrowUp' || e.key == ' ') {
                 img.src = 'images/Bird-2.png';
                 bird_dy = -7.6;
             }
         });
 
         document.addEventListener('keyup', (e) => {
-            if(e.key == 'ArrowUp' || e.key == ' '){
+            if (e.key == 'ArrowUp' || e.key == ' ') {
                 img.src = 'images/Bird.png';
             }
         });
 
-        if(bird_props.top <= 0 || bird_props.bottom >= background.bottom){
+        if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
             game_state = 'End';
             message.style.left = '28vw';
             window.location.reload();
@@ -110,15 +124,15 @@ function play(){
     }
     requestAnimationFrame(apply_gravity);
 
-    let pipe_seperation = 0;
+    let pipe_separation = 0;
 
     let pipe_gap = window.innerWidth > 1080 ? 35 : 20; // Ajusta el espacio para pantallas móviles
 
-    function create_pipe(){
-        if(game_state != 'Play') return;
+    function create_pipe() {
+        if (game_state != 'Play') return;
 
-        if(pipe_seperation > 115){
-            pipe_seperation = 0;
+        if (pipe_separation > 115) {
+            pipe_separation = 0;
 
             let pipe_posi = Math.floor(Math.random() * 43) + 8;
             let pipe_sprite_inv = document.createElement('div');
@@ -135,32 +149,12 @@ function play(){
 
             document.body.appendChild(pipe_sprite);
         }
-        pipe_seperation++;
+        pipe_separation++;
         requestAnimationFrame(create_pipe);
     }
     requestAnimationFrame(create_pipe);
 }
 
-// Agrega un evento 'click' para iniciar el juego en dispositivos táctiles
-document.addEventListener('click', () => {
-    if (game_state !== 'Play') {
-        document.querySelectorAll('.pipe_sprite').forEach((e) => {
-            e.remove();
-        });
-        img.style.display = 'block';
-        bird.style.top = '40vh';
-        game_state = 'Play';
-        message.innerHTML = '';
-        score_title.innerHTML = 'Score : ';
-        score_val.innerHTML = '0';
-        message.classList.remove('messageStyle');
-        play();
-    }
-});
+// Resto del código...
 
-// Agrega un evento 'click' para iniciar el juego en dispositivos táctiles
-document.addEventListener('click', () => {
-    if (game_state !== 'Play') {
-        startGame();
-    }
-});
+// Continúa con cualquier otra función o manipulación del DOM que necesites aquí.
