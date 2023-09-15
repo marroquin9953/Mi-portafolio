@@ -157,3 +157,10 @@ document.addEventListener('click', () => {
         play();
     }
 });
+
+// Agrega un evento 'click' para iniciar el juego en dispositivos táctiles
+document.addEventListener('click', () => {
+    if (game_state !== 'Play') {
+        startGame();
+    }
+});

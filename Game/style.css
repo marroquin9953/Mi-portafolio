@@ -60,7 +60,7 @@
 	font-weight: 100;
 	color: white;
 	-webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke_color: black;
 	top: 0;
 	left: 0;
 	margin: 10px;
@@ -72,30 +72,26 @@
 	font-weight: bold;
 }
 
+/* Estilos para dispositivos móviles */
 @media only screen and (max-width: 1080px) {
     .message {
-		font-size: 50px;
-		top: 50%;
-		white-space: nowrap;
-	}
-	.score {
-		font-size: 8vh;
-	}
-	.bird {
-		width: 80px; /* Ajusta el tamaño del pájaro en dispositivos móviles */
-		height: 60px;
-	}
-	.pipe_sprite {
-		width: 10vw; /* Ajusta el ancho de las tuberías en dispositivos móviles */
-	}
-	
-    .message {
-        font-size: 4em;
-        top: 30%;
+        font-size: 3em; /* Tamaño de fuente más pequeño para dispositivos móviles */
+        top: 50%; /* Alineación vertical centrada */
+        white-space: nowrap;
     }
 
     .messageStyle {
-        padding: 15px; /* Reduce el espaciado interior para dispositivos móviles */
+        padding: 15px; /* Espaciado interior reducido para dispositivos móviles */
+    }
+
+    /* Estilo adicional para hacer más pequeño el pájaro en dispositivos móviles si es necesario */
+    .bird {
+        width: 80px;
+        height: 60px;
+    }
+
+    /* Estilo adicional para hacer más estrechas las tuberías en dispositivos móviles si es necesario */
+    .pipe_sprite {
+        width: 10vw;
     }
 }
-
