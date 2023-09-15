@@ -88,4 +88,14 @@
 	.pipe_sprite {
 		width: 10vw; /* Ajusta el ancho de las tuberías en dispositivos móviles */
 	}
+	
+    .message {
+        font-size: 4em;
+        top: 30%;
+    }
+
+    .messageStyle {
+        padding: 15px; /* Reduce el espaciado interior para dispositivos móviles */
+    }
 }
+

@@ -140,3 +140,20 @@ function play(){
     }
     requestAnimationFrame(create_pipe);
 }
+
+// Agrega un evento 'click' para iniciar el juego en dispositivos táctiles
+document.addEventListener('click', () => {
+    if (game_state !== 'Play') {
+        document.querySelectorAll('.pipe_sprite').forEach((e) => {
+            e.remove();
+        });
+        img.style.display = 'block';
+        bird.style.top = '40vh';
+        game_state = 'Play';
+        message.innerHTML = '';
+        score_title.innerHTML = 'Score : ';
+        score_val.innerHTML = '0';
+        message.classList.remove('messageStyle');
+        play();
+    }
+});
