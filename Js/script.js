@@ -95,7 +95,7 @@ var url = 'https://alex-marroquin.netlify.app/JS/generator.js';
   },
   "brandSetting":{
       "backgroundColor":"#085b53",
-      "brandImg":"https://alex-marroquin.netlify.app/images/2-img.svg",
+      "brandImg":"https://alex-marroquin.netlify.app/images/SARARobotics.png",
       "brandName":"Isidro Marroquin",
       "brandSubTitle":"Soporte Técnico",
       "ctaText":"Start Chat",
