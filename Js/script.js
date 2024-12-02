@@ -95,9 +95,9 @@ var url = 'https://alex-marroquin.netlify.app/JS/generator.js';
   },
   "brandSetting":{
       "backgroundColor":"#085b53",
-      "brandImg":"https://edna.io/wp-content/plugins/whatsapp-widget-generator/img/edna-logo.svg",
-      "brandName":"edna",
-      "brandSubTitle":"Typically replies within a day",
+      "brandImg":"https://alex-marroquin.netlify.app/images/2-img.svg",
+      "brandName":"Isidro Marroquin",
+      "brandSubTitle":"Soporte Técnico",
       "ctaText":"Start Chat",
       "phoneNumber":"50372064733",
       "welcomeText":"Customise chat button settings - Choose chat button design"
