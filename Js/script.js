@@ -78,3 +78,33 @@ botonValidar.addEventListener('click', () => {
         alerta.innerHTML = '';
     }
 })
+
+var url = 'https://alex-marroquin.netlify.app/JS/generator.js';
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = url;
+    var options = {
+  "host":"https://alex-marroquin.netlify.app",
+  "enabled":true,
+  "chatButtonSetting":{
+      "backgroundColor":"#4fce5d",
+      "ctaText":"",
+      "icon":"whatsapp",
+      "position":"left",
+  },
+  "brandSetting":{
+      "backgroundColor":"#085b53",
+      "brandImg":"https://edna.io/wp-content/plugins/whatsapp-widget-generator/img/edna-logo.svg",
+      "brandName":"edna",
+      "brandSubTitle":"Typically replies within a day",
+      "ctaText":"Start Chat",
+      "phoneNumber":"50372064733",
+      "welcomeText":"Customise chat button settings - Choose chat button design"
+  }
+};
+    s.onload = function() {
+        CreateWhatsappChatWidget(options);
+    };
+    var x = document.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
