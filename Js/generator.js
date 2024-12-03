@@ -62,12 +62,12 @@ function CreateWhatsappChatWidget(option = {
         jQuery('#whatsapp_chat_widget').append(`
             <div class='wa-chat-box'>
                 <div class='wa-chat-box-header'>
-                    <img class='wa-chat-box-brand' onError='this.src= "${option.host}/wp-content/plugins/whatsapp-widget-generator/img/edna-logo.svg";' src='${option.brandSetting.brandImg}'/>
+                    <img class='wa-chat-box-brand' onError='this.src= "${option.host}/images/ProfileMy.jpeg";' src='${option.brandSetting.brandImg}'/>
                     <div class='wa-chat-box-brand-text'>
                         <div class='wa-chat-box-brand-name'>${option.brandSetting.brandName}</div>
                         <div class='wa-chat-box-brand-subtitle'>${option.brandSetting.brandSubTitle}</div>
                     </div>
-                    <div class="wa-chat-bubble-close-btn"><img style="display: table-row" src="${option.host}/wp-content/plugins/whatsapp-widget-generator/img/icon-close.png"/></div>
+                    <div class="wa-chat-bubble-close-btn"><img style="display: table-row" src="${option.host}/images/icon-close.png"/></div>
                 </div>
                 
                 <div class='wa-chat-box-content'>
