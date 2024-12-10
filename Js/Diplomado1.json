@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "name": "Juan Pérez",
+        "ieee_number": "123456",
+        "issue_date": "2024-12-09",
+        "certificate_title": "Certificado de Participación",
+        "certificate_preview": "certificado1.png"
+    },
+    {
+        "id": 2,
+        "name": "María López",
+        "ieee_number": "654321",
+        "issue_date": "2024-12-10",
+        "certificate_title": "Certificado de Asistencia",
+        "certificate_preview": "certificado2.png"
+    }
+]
