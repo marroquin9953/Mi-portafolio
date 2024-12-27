@@ -1,6 +1,4 @@
-let isSubmitting = false; // Variable global para evitar múltiples envíos
-
-function init() {
+function initcontacto() {
     // Asociar el evento de envío solo una vez
     $("#cotizacion_form").off("submit.cotizacion").on("submit.cotizacion", function (e) {
         guardar(e);
@@ -8,7 +6,7 @@ function init() {
 }
 
 $(document).ready(function () {
-    init();
+    initcontacto();
 });
 
 function showProcessingAlert() {
@@ -19,7 +17,7 @@ function showProcessingAlert() {
         showConfirmButton: false,
         didOpen: () => {
             // Agregar animación spinner
-            const spinnerStyle = `
+            const spinnerStyle = 
                 .spinner {
                     border: 4px solid #f3f3f3;
                     border-top: 4px solid #3498db;
@@ -34,7 +32,7 @@ function showProcessingAlert() {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                 }
-            `;
+            ;
             const style = document.createElement("style");
             style.textContent = spinnerStyle;
             document.head.appendChild(style);
@@ -60,7 +58,7 @@ function guardar(e) {
     showProcessingAlert();
 
     $.ajax({
-        url: "controller/usuario.php?op=guardarSolicitud",
+        url: "../controller/usuario.php?op=guardarSolicitud",
         type: "POST",
         data: formData,
         contentType: false,
