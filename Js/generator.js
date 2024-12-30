@@ -184,7 +184,7 @@ function CreateWhatsappChatWidget(option = {
             border-radius: 10px;
         }
         .wa-chat-box-content{
-            background: url('${option.host}/images/FondoChat.jpg');
+            background: url('${option.host}/images/FondoWidgetWha.jpg');
         }
         .wa-chat-bubble-close-btn{
             cursor: pointer;
