@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #ffffff, #f0f8ff);
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #0066cc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #87CEEB;
+            text-align: left;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .work-details {
+            border: 2px solid #0066cc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            background-color: #87CEEB;
+            color: #2c3e50;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 300px;
+            border: 2px dashed #0066cc;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .photo-box {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #0066cc;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .photo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .photo-box:hover {
+            background-color: #e9ecef;
+            border-color: #004999;
+        }
+
+        .description-box {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: white;
+            min-height: 60px;
+            resize: vertical;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .signature-box {
+            width: 45%;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .signature-placeholder {
+            width: 100%;
+            height: 80px;
+            border: 2px dashed #0066cc;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            min-height: 50px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Reporte Fotográfico</h2>
+            <div class="logo-placeholder">
+                <img src="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png" alt="Logo" width="75">
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div>
+                <p><strong>Tienda:</strong> <span id="tienda"></span></p>
+                <p><strong>Numero de ID:</strong> <span id="numeroId"></span></p>
+                <p><strong>Orden de Trabajo:</strong> <span id="ordenTrabajo"></span></p>
+            </div>
+            <div>
+                <p><strong>Correlativo:</strong> <span id="correlativo"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+            </div>
+        </div>
+
+        <div class="work-details">
+            <table>
+                <tr>
+                    <th colspan="2">Detalle del trabajo</th>
+                </tr>
+                <tr>
+                    <td><strong>Trabajo realizado en:</strong></td>
+                    <td id="trabajoRealizadoEn"></td>
+                </tr>
+                <tr>
+                    <td><strong>Tipo de mantenimiento:</strong></td>
+                    <td id="tipoMantenimiento"></td>
+                </tr>
+                <tr>
+                    <td><strong>Descripción del trabajo:</strong></td>
+                    <td id="descripcionTrabajo"></td>
+                </tr>
+                <tr>
+                    <td><strong>Recomendaciones:</strong></td>
+                    <td id="recomendaciones"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="container">
+            <h3 class="section-title">Fotografía del reporte de trabajo</h3>
+            <div class="photo-box">
+                <img id="fotoReporteTrabajo" src="" alt="Fotografía principal">
+            </div>
+        </div>
+
+        <table>
+            <tr>
+                <th colspan="2">Repuestos utilizados</th>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <th>Nombre del repuesto</th>
+            </tr>
+            <tr>
+                <td id="cantidad1"></td>
+                <td id="repuesto1"></td>
+            </tr>
+            <tr>
+                <td id="cantidad2"></td>
+                <td id="repuesto2"></td>
+            </tr>
+            <tr>
+                <td id="cantidad3"></td>
+                <td id="repuesto3"></td>
+            </tr>
+            <tr>
+                <td id="cantidad4"></td>
+                <td id="repuesto4"></td>
+            </tr>
+        </table>
+
+        <h3 class="section-title">Registro fotográfico</h3>
+        <div class="photo-grid">
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto1" src="" alt="Descripción 1">
+                </div>
+                <textarea id="descripcion1" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto2" src="" alt="Descripción 2">
+                </div>
+                <textarea id="descripcion2" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto3" src="" alt="Descripción 3">
+                </div>
+                <textarea id="descripcion3" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto4" src="" alt="Descripción 4">
+                </div>
+                <textarea id="descripcion4" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto5" src="" alt="Descripción 5">
+                </div>
+                <textarea id="descripcion5" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto6" src="" alt="Descripción 6">
+                </div>
+                <textarea id="descripcion6" class="description-box" readonly></textarea>
+            </div>
+        </div>
+
+        <div class="signatures">
+            <div class="signature-box">
+                <p><strong>Nombre del técnico:</strong> <span id="nombreTecnico"></span></p>
+                <div class="signature-placeholder">Firma</div>
+            </div>
+            <div class="signature-box">
+                <p><strong>Nombre de encargado PDV:</strong> <span id="nombreEncargado"></span></p>
+                <div class="signature-placeholder">Firma</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Pie de página para comentarios estáticos</p>
+        </div>
+    </div>
+
+    <script>
+        function getUrlParameters() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                tienda: params.get('tienda') || '',
+                numeroId: params.get('numeroId') || '',
+                ordenTrabajo: params.get('ordenTrabajo') || '',
+                correlativo: params.get('correlativo') || '',
+                fecha: params.get('fecha') || '',
+                trabajoRealizadoEn: params.get('trabajoRealizadoEn') || '',
+                tipoMantenimiento: params.get('tipoMantenimiento') || '',
+                descripcionTrabajo: params.get('descripcionTrabajo') || '',
+                recomendaciones: params.get('recomendaciones') || '',
+                fotoReporteTrabajo: params.get('fotoReporteTrabajo') || '',
+                cantidad1: params.get('cantidad1') || '',
+                repuesto1: params.get('repuesto1') || '',
+                cantidad2: params.get('cantidad2') || '',
+                repuesto2: params.get('repuesto2') || '',
+                cantidad3: params.get('cantidad3') || '',
+                repuesto3: params.get('repuesto3') || '',
+                cantidad4: params.get('cantidad4') || '',
+                repuesto4: params.get('repuesto4') || '',
+                foto1: params.get('foto1') || '',
+                descripcion1: params.get('descripcion1') || '',
+                foto2: params.get('foto2') || '',
+                descripcion2: params.get('descripcion2') || '',
+                foto3: params.get('foto3') || '',
+                descripcion3: params.get('descripcion3') || '',
+                foto4: params.get('foto4') || '',
+                descripcion4: params.get('descripcion4') || '',
+                foto5: params.get('foto5') || '',
+                descripcion5: params.get('descripcion5') || '',
+                foto6: params.get('foto6') || '',
+                descripcion6: params.get('descripcion6') || '',
+                nombreTecnico: params.get('nombreTecnico') || '',
+                nombreEncargado: params.get('nombreEncargado') || ''
+            };
+        }
+
+        function populateFields() {
+            const params = getUrlParameters();
+            
+            // Populate text fields
+            document.getElementById('tienda').textContent = decodeURIComponent(params.tienda);
+            document.getElementById('numeroId').textContent = decodeURIComponent(params.numeroId);
+            document.getElementById('ordenTrabajo').textContent = decodeURIComponent(params.ordenTrabajo);
+            document.getElementById('correlativo').textContent = decodeURIComponent(params.correlativo);
+            document.getElementById('fecha').textContent = decodeURIComponent(params.fecha);
+            document.getElementById('trabajoRealizadoEn').textContent = decodeURIComponent(params.trabajoRealizadoEn);
+            document.getElementById('tipoMantenimiento').textContent = decodeURIComponent(params.tipoMantenimiento);
+            document.getElementById('descripcionTrabajo').textContent = decodeURIComponent(params.descripcionTrabajo);
+            document.getElementById('recomendaciones').textContent = decodeURIComponent(params.recomendaciones);
+            
+            // Populate main photo
+            if (params.fotoReporteTrabajo) {
+                document.getElementById('fotoReporteTrabajo').src = decodeURIComponent(params.fotoReporteTrabajo);
+            }
+            
+            // Populate parts table
+            document.getElementById('cantidad1').textContent = decodeURIComponent(params.cantidad1);
+            document.getElementById('repuesto1').textContent = decodeURIComponent(params.repuesto1);
+            document.getElementById('cantidad2').textContent = decodeURIComponent(params.cantidad2);
+            document.getElementById('repuesto2').textContent = decodeURIComponent(params.repuesto2);
+            document.getElementById('cantidad3').textContent = decodeURIComponent(params.cantidad3);
+            document.getElementById('repuesto3').textContent = decodeURIComponent(params.repuesto3);
+            document.getElementById('cantidad4').textContent = decodeURIComponent(params.cantidad4);
+            document.getElementById('repuesto4').textContent = decodeURIComponent(params.repuesto4);
+            
+            // Populate photo grid
+            for (let i = 1; i <= 6; i++) {
+                const foto = document.getElementById(`foto${i}`);
+                const descripcion = document.getElementById(`descripcion${i}`);
+                if (params[`foto${i}`]) {
+                    foto.src = decodeURIComponent(params[`foto${i}`]);
+                }
+                descripcion.value = decodeURIComponent(params[`descripcion${i}`]);
+            }
+            
+            // Populate signatures
+            document.getElementById('nombreTecnico').textContent = decodeURIComponent(params.nombreTecnico);
+            document.getElementById('nombreEncargado').textContent = decodeURIComponent(params.nombreEncargado);
+        }
+
+        // Execute when the page loads
+        window.addEventListener('load', populateFields);
+    </script>
+</body>
+</html>
