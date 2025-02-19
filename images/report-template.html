@@ -331,62 +331,51 @@
     </div>
 <script>
     function getUrlParameters() {
-        // Obtener la URL completa
-        const fullUrl = window.location.href;
+        const url = window.location.href;
         const params = {};
         
         // Si no hay parámetros, retornar objeto vacío
-        if (!fullUrl.includes('?')) return params;
+        if (!url.includes('?')) return params;
         
-        // Dividir la URL en base y parámetros
-        const [, paramString] = fullUrl.split('?');
+        // Obtener la parte de los parámetros de la URL
+        const queryString = url.split('?')[1];
         
-        // Variable para almacenar el parámetro actual
-        let currentParam = '';
-        let currentValue = '';
-        let isCollectingValue = false;
+        // Variable para almacenar el parámetro actual y su valor
+        let paramName = '';
+        let paramValue = '';
+        let isParsingName = true;
+        let isInsideValue = false;
         
-        // Recorrer la cadena de parámetros carácter por carácter
-        for (let i = 0; i < paramString.length; i++) {
-            const char = paramString[i];
+        for (let i = 0; i < queryString.length; i++) {
+            const char = queryString[i];
             
-            if (!isCollectingValue) {
-                // Todavía estamos recolectando el nombre del parámetro
+            if (isParsingName) {
                 if (char === '=') {
-                    isCollectingValue = true;
+                    isParsingName = false;
+                    isInsideValue = true;
                 } else if (char !== '&') {
-                    currentParam += char;
+                    paramName += char;
                 }
-            } else {
-                // Estamos recolectando el valor
-                if (char === '&') {
-                    // Fin del valor actual
-                    params[currentParam] = currentValue;
-                    currentParam = '';
-                    currentValue = '';
-                    isCollectingValue = false;
+            } else if (isInsideValue) {
+                // Si encontramos un & y no es parte de una URL interna
+                if (char === '&' && !paramValue.includes('http')) {
+                    params[paramName] = paramValue;
+                    paramName = '';
+                    paramValue = '';
+                    isParsingName = true;
+                    isInsideValue = false;
                 } else {
-                    currentValue += char;
+                    paramValue += char;
                 }
             }
         }
         
-        // Agregar el último parámetro si existe
-        if (currentParam && isCollectingValue) {
-            params[currentParam] = currentValue;
+        // Agregar el último parámetro
+        if (paramName && paramValue) {
+            params[paramName] = paramValue;
         }
         
         return params;
-    }
-
-    function decodeValue(value) {
-        try {
-            // Intentar decodificar el valor
-            return decodeURIComponent(value);
-        } catch (e) {
-            // Si falla la decodificación, retornar el valor original
-            return value;
-        }
     }
 
     function setElementContent(element, content) {
@@ -394,81 +383,85 @@
         
         try {
             if (element.tagName.toLowerCase() === 'img') {
+                // Para imágenes, usamos el contenido sin decodificar
                 element.src = content;
             } else if (element.tagName.toLowerCase() === 'textarea') {
-                element.value = decodeValue(content);
+                element.value = decodeURIComponent(content);
             } else {
-                element.textContent = decodeValue(content);
+                element.textContent = decodeURIComponent(content);
             }
         } catch (e) {
             console.error('Error al establecer contenido:', e);
+            // Si falla la decodificación, usar el valor original
+            if (element.tagName.toLowerCase() === 'img') {
+                element.src = content;
+            } else if (element.tagName.toLowerCase() === 'textarea') {
+                element.value = content;
+            } else {
+                element.textContent = content;
+            }
         }
     }
 
     function populateFields() {
-        try {
-            const params = getUrlParameters();
-            
-            // Lista de campos de texto simple
-            const textFields = [
-                'tienda', 'numeroId', 'ordenTrabajo', 'correlativo', 
-                'fecha', 'trabajoRealizadoEn', 'tipoMantenimiento', 
-                'descripcionTrabajo', 'recomendaciones'
-            ];
-            
-            // Poblar campos de texto
-            textFields.forEach(field => {
-                const element = document.getElementById(field);
-                if (element && params[field]) {
-                    setElementContent(element, params[field]);
-                }
-            });
-            
-            // Poblar foto principal
-            const mainPhoto = document.getElementById('fotoReporteTrabajo');
-            if (mainPhoto && params.fotoReporteTrabajo) {
-                setElementContent(mainPhoto, params.fotoReporteTrabajo);
+        const params = getUrlParameters();
+        
+        // Campos de texto simple
+        const textFields = [
+            'tienda', 'numeroId', 'ordenTrabajo', 'correlativo', 
+            'fecha', 'trabajoRealizadoEn', 'tipoMantenimiento', 
+            'descripcionTrabajo', 'recomendaciones'
+        ];
+        
+        // Poblar campos de texto
+        textFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element && params[field]) {
+                setElementContent(element, params[field]);
             }
+        });
+        
+        // Poblar foto principal
+        const mainPhoto = document.getElementById('fotoReporteTrabajo');
+        if (mainPhoto && params.fotoReporteTrabajo) {
+            setElementContent(mainPhoto, params.fotoReporteTrabajo);
+        }
+        
+        // Poblar tabla de repuestos
+        for (let i = 1; i <= 4; i++) {
+            const cantidadElement = document.getElementById(`cantidad${i}`);
+            const repuestoElement = document.getElementById(`repuesto${i}`);
             
-            // Poblar tabla de repuestos
-            for (let i = 1; i <= 4; i++) {
-                const cantidadElement = document.getElementById(`cantidad${i}`);
-                const repuestoElement = document.getElementById(`repuesto${i}`);
-                
-                if (cantidadElement && params[`cantidad${i}`]) {
-                    setElementContent(cantidadElement, params[`cantidad${i}`]);
-                }
-                if (repuestoElement && params[`repuesto${i}`]) {
-                    setElementContent(repuestoElement, params[`repuesto${i}`]);
-                }
+            if (cantidadElement && params[`cantidad${i}`]) {
+                setElementContent(cantidadElement, params[`cantidad${i}`]);
             }
-            
-            // Poblar grid de fotos
-            for (let i = 1; i <= 6; i++) {
-                const fotoElement = document.getElementById(`foto${i}`);
-                const descripcionElement = document.getElementById(`descripcion${i}`);
-                
-                if (fotoElement && params[`foto${i}`]) {
-                    setElementContent(fotoElement, params[`foto${i}`]);
-                }
-                if (descripcionElement && params[`descripcion${i}`]) {
-                    setElementContent(descripcionElement, params[`descripcion${i}`]);
-                }
+            if (repuestoElement && params[`repuesto${i}`]) {
+                setElementContent(repuestoElement, params[`repuesto${i}`]);
             }
+        }
+        
+        // Poblar grid de fotos
+        for (let i = 1; i <= 6; i++) {
+            const fotoElement = document.getElementById(`foto${i}`);
+            const descripcionElement = document.getElementById(`descripcion${i}`);
             
-            // Poblar firmas
-            const tecnicoElement = document.getElementById('nombreTecnico');
-            const encargadoElement = document.getElementById('nombreEncargado');
-            
-            if (tecnicoElement && params.nombreTecnico) {
-                setElementContent(tecnicoElement, params.nombreTecnico);
+            if (fotoElement && params[`foto${i}`]) {
+                setElementContent(fotoElement, params[`foto${i}`]);
             }
-            if (encargadoElement && params.nombreEncargado) {
-                setElementContent(encargadoElement, params.nombreEncargado);
+            if (descripcionElement && params[`descripcion${i}`]) {
+                setElementContent(descripcionElement, params[`descripcion${i}`]);
             }
-            
-        } catch (e) {
-            console.error('Error al poblar los campos:', e);
+        }
+        
+        // Poblar firmas
+        const tecnicoElement = document.getElementById('nombreTecnico');
+        const encargadoElement = document.getElementById('nombreEncargado');
+        
+        if (tecnicoElement && params.nombreTecnico) {
+            setElementContent(tecnicoElement, params.nombreTecnico);
+        }
+        if (encargadoElement && params.nombreEncargado) {
+            setElementContent(encargadoElement, params.nombreEncargado);
         }
     }
 
