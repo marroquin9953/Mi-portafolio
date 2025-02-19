@@ -329,144 +329,136 @@
             <p>Pie de página para comentarios estáticos</p>
         </div>
     </div>
-<script>
-    function getUrlParameters() {
+
+    <script>
+function getUrlParameters() {
+    // Función para extraer el valor completo de un parámetro de imagen
+    function extractImageUrl(paramName) {
         const url = window.location.href;
-        const params = {};
+        const paramStart = url.indexOf(paramName + '=');
+        if (paramStart === -1) return '';
         
-        // Si no hay parámetros, retornar objeto vacío
-        if (!url.includes('?')) return params;
+        const valueStart = paramStart + paramName.length + 1;
+        let valueEnd = url.indexOf('&', valueStart);
         
-        // Obtener la parte de los parámetros de la URL
-        const queryString = url.split('?')[1];
-        
-        // Variable para almacenar el parámetro actual y su valor
-        let paramName = '';
-        let paramValue = '';
-        let isParsingName = true;
-        let isInsideValue = false;
-        
-        for (let i = 0; i < queryString.length; i++) {
-            const char = queryString[i];
-            
-            if (isParsingName) {
-                if (char === '=') {
-                    isParsingName = false;
-                    isInsideValue = true;
-                } else if (char !== '&') {
-                    paramName += char;
-                }
-            } else if (isInsideValue) {
-                // Si encontramos un & y no es parte de una URL interna
-                if (char === '&' && !paramValue.includes('http')) {
-                    params[paramName] = paramValue;
-                    paramName = '';
-                    paramValue = '';
-                    isParsingName = true;
-                    isInsideValue = false;
-                } else {
-                    paramValue += char;
-                }
+        // Si no hay más parámetros después de la URL
+        if (valueEnd === -1) {
+            valueEnd = url.length;
+        } else {
+            // Verificar si el & encontrado es parte de la URL de la imagen
+            // o es un separador de parámetros del template
+            const nextParamStart = url.indexOf('=', valueEnd);
+            if (nextParamStart === -1 || url.substring(valueEnd + 1, nextParamStart).indexOf('foto') === -1) {
+                valueEnd = url.length;
             }
         }
         
-        // Agregar el último parámetro
-        if (paramName && paramValue) {
-            params[paramName] = paramValue;
-        }
-        
-        return params;
+        return url.substring(valueStart, valueEnd);
     }
 
-    function setElementContent(element, content) {
-        if (!element) return;
-        
+    const params = new URLSearchParams(window.location.search);
+    const result = {
+        // Parámetros de información general
+        tienda: params.get('tienda') || '',
+        numeroId: params.get('numeroId') || '',
+        ordenTrabajo: params.get('ordenTrabajo') || '',
+        correlativo: params.get('correlativo') || '',
+        fecha: params.get('fecha') || '',
+        trabajoRealizadoEn: params.get('trabajoRealizadoEn') || '',
+        tipoMantenimiento: params.get('tipoMantenimiento') || '',
+        descripcionTrabajo: params.get('descripcionTrabajo') || '',
+        recomendaciones: params.get('recomendaciones') || '',
+
+        // Parámetros de repuestos
+        cantidad1: params.get('cantidad1') || '',
+        repuesto1: params.get('repuesto1') || '',
+        cantidad2: params.get('cantidad2') || '',
+        repuesto2: params.get('repuesto2') || '',
+        cantidad3: params.get('cantidad3') || '',
+        repuesto3: params.get('repuesto3') || '',
+        cantidad4: params.get('cantidad4') || '',
+        repuesto4: params.get('repuesto4') || '',
+
+        // Parámetros de descripciones
+        descripcion1: params.get('descripcion1') || '',
+        descripcion2: params.get('descripcion2') || '',
+        descripcion3: params.get('descripcion3') || '',
+        descripcion4: params.get('descripcion4') || '',
+        descripcion5: params.get('descripcion5') || '',
+        descripcion6: params.get('descripcion6') || '',
+
+        // Parámetros de firmas
+        nombreTecnico: params.get('nombreTecnico') || '',
+        nombreEncargado: params.get('nombreEncargado') || '',
+
+        // Extraer todas las URLs de fotos de forma especial
+        fotoReporteTrabajo: extractImageUrl('fotoReporteTrabajo'),
+        foto1: extractImageUrl('foto1'),
+        foto2: extractImageUrl('foto2'),
+        foto3: extractImageUrl('foto3'),
+        foto4: extractImageUrl('foto4'),
+        foto5: extractImageUrl('foto5'),
+        foto6: extractImageUrl('foto6')
+    };
+
+    return result;
+}
+
+function populateFields() {
+    const params = getUrlParameters();
+    
+    // Función auxiliar para manejar texto
+    function handleText(text) {
         try {
-            if (element.tagName.toLowerCase() === 'img') {
-                // Para imágenes, usamos el contenido sin decodificar
-                element.src = content;
-            } else if (element.tagName.toLowerCase() === 'textarea') {
-                element.value = decodeURIComponent(content);
-            } else {
-                element.textContent = decodeURIComponent(content);
-            }
+            return decodeURIComponent(text);
         } catch (e) {
-            console.error('Error al establecer contenido:', e);
-            // Si falla la decodificación, usar el valor original
-            if (element.tagName.toLowerCase() === 'img') {
-                element.src = content;
-            } else if (element.tagName.toLowerCase() === 'textarea') {
-                element.value = content;
-            } else {
-                element.textContent = content;
-            }
+            return text;
         }
     }
-
-    function populateFields() {
-        const params = getUrlParameters();
-        
-        // Campos de texto simple
-        const textFields = [
-            'tienda', 'numeroId', 'ordenTrabajo', 'correlativo', 
-            'fecha', 'trabajoRealizadoEn', 'tipoMantenimiento', 
-            'descripcionTrabajo', 'recomendaciones'
-        ];
-        
-        // Poblar campos de texto
-        textFields.forEach(field => {
-            const element = document.getElementById(field);
-            if (element && params[field]) {
-                setElementContent(element, params[field]);
-            }
-        });
-        
-        // Poblar foto principal
-        const mainPhoto = document.getElementById('fotoReporteTrabajo');
-        if (mainPhoto && params.fotoReporteTrabajo) {
-            setElementContent(mainPhoto, params.fotoReporteTrabajo);
-        }
-        
-        // Poblar tabla de repuestos
-        for (let i = 1; i <= 4; i++) {
-            const cantidadElement = document.getElementById(`cantidad${i}`);
-            const repuestoElement = document.getElementById(`repuesto${i}`);
-            
-            if (cantidadElement && params[`cantidad${i}`]) {
-                setElementContent(cantidadElement, params[`cantidad${i}`]);
-            }
-            if (repuestoElement && params[`repuesto${i}`]) {
-                setElementContent(repuestoElement, params[`repuesto${i}`]);
-            }
-        }
-        
-        // Poblar grid de fotos
-        for (let i = 1; i <= 6; i++) {
-            const fotoElement = document.getElementById(`foto${i}`);
-            const descripcionElement = document.getElementById(`descripcion${i}`);
-            
-            if (fotoElement && params[`foto${i}`]) {
-                setElementContent(fotoElement, params[`foto${i}`]);
-            }
-            if (descripcionElement && params[`descripcion${i}`]) {
-                setElementContent(descripcionElement, params[`descripcion${i}`]);
-            }
-        }
-        
-        // Poblar firmas
-        const tecnicoElement = document.getElementById('nombreTecnico');
-        const encargadoElement = document.getElementById('nombreEncargado');
-        
-        if (tecnicoElement && params.nombreTecnico) {
-            setElementContent(tecnicoElement, params.nombreTecnico);
-        }
-        if (encargadoElement && params.nombreEncargado) {
-            setElementContent(encargadoElement, params.nombreEncargado);
-        }
+    
+    // Populate text fields
+    document.getElementById('tienda').textContent = handleText(params.tienda);
+    document.getElementById('numeroId').textContent = handleText(params.numeroId);
+    document.getElementById('ordenTrabajo').textContent = handleText(params.ordenTrabajo);
+    document.getElementById('correlativo').textContent = handleText(params.correlativo);
+    document.getElementById('fecha').textContent = handleText(params.fecha);
+    document.getElementById('trabajoRealizadoEn').textContent = handleText(params.trabajoRealizadoEn);
+    document.getElementById('tipoMantenimiento').textContent = handleText(params.tipoMantenimiento);
+    document.getElementById('descripcionTrabajo').textContent = handleText(params.descripcionTrabajo);
+    document.getElementById('recomendaciones').textContent = handleText(params.recomendaciones);
+    
+    // Populate main photo
+    if (params.fotoReporteTrabajo) {
+        document.getElementById('fotoReporteTrabajo').src = params.fotoReporteTrabajo;
     }
+    
+    // Populate parts table
+    document.getElementById('cantidad1').textContent = handleText(params.cantidad1);
+    document.getElementById('repuesto1').textContent = handleText(params.repuesto1);
+    document.getElementById('cantidad2').textContent = handleText(params.cantidad2);
+    document.getElementById('repuesto2').textContent = handleText(params.repuesto2);
+    document.getElementById('cantidad3').textContent = handleText(params.cantidad3);
+    document.getElementById('repuesto3').textContent = handleText(params.repuesto3);
+    document.getElementById('cantidad4').textContent = handleText(params.cantidad4);
+    document.getElementById('repuesto4').textContent = handleText(params.repuesto4);
+    
+    // Populate photo grid
+    for (let i = 1; i <= 6; i++) {
+        const foto = document.getElementById(`foto${i}`);
+        const descripcion = document.getElementById(`descripcion${i}`);
+        if (params[`foto${i}`]) {
+            foto.src = params[`foto${i}`];
+        }
+        descripcion.value = handleText(params[`descripcion${i}`]);
+    }
+    
+    // Populate signatures
+    document.getElementById('nombreTecnico').textContent = handleText(params.nombreTecnico);
+    document.getElementById('nombreEncargado').textContent = handleText(params.nombreEncargado);
+}
 
-    // Ejecutar cuando la página carga
-    window.addEventListener('load', populateFields);
-</script>
+// Execute when the page loads
+window.addEventListener('load', populateFields);
+    </script>
 </body>
 </html>
