@@ -329,92 +329,151 @@
             <p>Pie de página para comentarios estáticos</p>
         </div>
     </div>
-
-    <script>
-        function getUrlParameters() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                tienda: params.get('tienda') || '',
-                numeroId: params.get('numeroId') || '',
-                ordenTrabajo: params.get('ordenTrabajo') || '',
-                correlativo: params.get('correlativo') || '',
-                fecha: params.get('fecha') || '',
-                trabajoRealizadoEn: params.get('trabajoRealizadoEn') || '',
-                tipoMantenimiento: params.get('tipoMantenimiento') || '',
-                descripcionTrabajo: params.get('descripcionTrabajo') || '',
-                recomendaciones: params.get('recomendaciones') || '',
-                fotoReporteTrabajo: params.get('fotoReporteTrabajo') || '',
-                cantidad1: params.get('cantidad1') || '',
-                repuesto1: params.get('repuesto1') || '',
-                cantidad2: params.get('cantidad2') || '',
-                repuesto2: params.get('repuesto2') || '',
-                cantidad3: params.get('cantidad3') || '',
-                repuesto3: params.get('repuesto3') || '',
-                cantidad4: params.get('cantidad4') || '',
-                repuesto4: params.get('repuesto4') || '',
-                foto1: params.get('foto1') || '',
-                descripcion1: params.get('descripcion1') || '',
-                foto2: params.get('foto2') || '',
-                descripcion2: params.get('descripcion2') || '',
-                foto3: params.get('foto3') || '',
-                descripcion3: params.get('descripcion3') || '',
-                foto4: params.get('foto4') || '',
-                descripcion4: params.get('descripcion4') || '',
-                foto5: params.get('foto5') || '',
-                descripcion5: params.get('descripcion5') || '',
-                foto6: params.get('foto6') || '',
-                descripcion6: params.get('descripcion6') || '',
-                nombreTecnico: params.get('nombreTecnico') || '',
-                nombreEncargado: params.get('nombreEncargado') || ''
-            };
+<script>
+    function getUrlParameters() {
+        // Obtener la URL completa
+        const fullUrl = window.location.href;
+        const params = {};
+        
+        // Si no hay parámetros, retornar objeto vacío
+        if (!fullUrl.includes('?')) return params;
+        
+        // Dividir la URL en base y parámetros
+        const [, paramString] = fullUrl.split('?');
+        
+        // Variable para almacenar el parámetro actual
+        let currentParam = '';
+        let currentValue = '';
+        let isCollectingValue = false;
+        
+        // Recorrer la cadena de parámetros carácter por carácter
+        for (let i = 0; i < paramString.length; i++) {
+            const char = paramString[i];
+            
+            if (!isCollectingValue) {
+                // Todavía estamos recolectando el nombre del parámetro
+                if (char === '=') {
+                    isCollectingValue = true;
+                } else if (char !== '&') {
+                    currentParam += char;
+                }
+            } else {
+                // Estamos recolectando el valor
+                if (char === '&') {
+                    // Fin del valor actual
+                    params[currentParam] = currentValue;
+                    currentParam = '';
+                    currentValue = '';
+                    isCollectingValue = false;
+                } else {
+                    currentValue += char;
+                }
+            }
         }
+        
+        // Agregar el último parámetro si existe
+        if (currentParam && isCollectingValue) {
+            params[currentParam] = currentValue;
+        }
+        
+        return params;
+    }
 
-        function populateFields() {
+    function decodeValue(value) {
+        try {
+            // Intentar decodificar el valor
+            return decodeURIComponent(value);
+        } catch (e) {
+            // Si falla la decodificación, retornar el valor original
+            return value;
+        }
+    }
+
+    function setElementContent(element, content) {
+        if (!element) return;
+        
+        try {
+            if (element.tagName.toLowerCase() === 'img') {
+                element.src = content;
+            } else if (element.tagName.toLowerCase() === 'textarea') {
+                element.value = decodeValue(content);
+            } else {
+                element.textContent = decodeValue(content);
+            }
+        } catch (e) {
+            console.error('Error al establecer contenido:', e);
+        }
+    }
+
+    function populateFields() {
+        try {
             const params = getUrlParameters();
             
-            // Populate text fields
-            document.getElementById('tienda').textContent = decodeURIComponent(params.tienda);
-            document.getElementById('numeroId').textContent = decodeURIComponent(params.numeroId);
-            document.getElementById('ordenTrabajo').textContent = decodeURIComponent(params.ordenTrabajo);
-            document.getElementById('correlativo').textContent = decodeURIComponent(params.correlativo);
-            document.getElementById('fecha').textContent = decodeURIComponent(params.fecha);
-            document.getElementById('trabajoRealizadoEn').textContent = decodeURIComponent(params.trabajoRealizadoEn);
-            document.getElementById('tipoMantenimiento').textContent = decodeURIComponent(params.tipoMantenimiento);
-            document.getElementById('descripcionTrabajo').textContent = decodeURIComponent(params.descripcionTrabajo);
-            document.getElementById('recomendaciones').textContent = decodeURIComponent(params.recomendaciones);
+            // Lista de campos de texto simple
+            const textFields = [
+                'tienda', 'numeroId', 'ordenTrabajo', 'correlativo', 
+                'fecha', 'trabajoRealizadoEn', 'tipoMantenimiento', 
+                'descripcionTrabajo', 'recomendaciones'
+            ];
             
-            // Populate main photo
-            if (params.fotoReporteTrabajo) {
-                document.getElementById('fotoReporteTrabajo').src = decodeURIComponent(params.fotoReporteTrabajo);
-            }
-            
-            // Populate parts table
-            document.getElementById('cantidad1').textContent = decodeURIComponent(params.cantidad1);
-            document.getElementById('repuesto1').textContent = decodeURIComponent(params.repuesto1);
-            document.getElementById('cantidad2').textContent = decodeURIComponent(params.cantidad2);
-            document.getElementById('repuesto2').textContent = decodeURIComponent(params.repuesto2);
-            document.getElementById('cantidad3').textContent = decodeURIComponent(params.cantidad3);
-            document.getElementById('repuesto3').textContent = decodeURIComponent(params.repuesto3);
-            document.getElementById('cantidad4').textContent = decodeURIComponent(params.cantidad4);
-            document.getElementById('repuesto4').textContent = decodeURIComponent(params.repuesto4);
-            
-            // Populate photo grid
-            for (let i = 1; i <= 6; i++) {
-                const foto = document.getElementById(`foto${i}`);
-                const descripcion = document.getElementById(`descripcion${i}`);
-                if (params[`foto${i}`]) {
-                    foto.src = decodeURIComponent(params[`foto${i}`]);
+            // Poblar campos de texto
+            textFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element && params[field]) {
+                    setElementContent(element, params[field]);
                 }
-                descripcion.value = decodeURIComponent(params[`descripcion${i}`]);
+            });
+            
+            // Poblar foto principal
+            const mainPhoto = document.getElementById('fotoReporteTrabajo');
+            if (mainPhoto && params.fotoReporteTrabajo) {
+                setElementContent(mainPhoto, params.fotoReporteTrabajo);
             }
             
-            // Populate signatures
-            document.getElementById('nombreTecnico').textContent = decodeURIComponent(params.nombreTecnico);
-            document.getElementById('nombreEncargado').textContent = decodeURIComponent(params.nombreEncargado);
+            // Poblar tabla de repuestos
+            for (let i = 1; i <= 4; i++) {
+                const cantidadElement = document.getElementById(`cantidad${i}`);
+                const repuestoElement = document.getElementById(`repuesto${i}`);
+                
+                if (cantidadElement && params[`cantidad${i}`]) {
+                    setElementContent(cantidadElement, params[`cantidad${i}`]);
+                }
+                if (repuestoElement && params[`repuesto${i}`]) {
+                    setElementContent(repuestoElement, params[`repuesto${i}`]);
+                }
+            }
+            
+            // Poblar grid de fotos
+            for (let i = 1; i <= 6; i++) {
+                const fotoElement = document.getElementById(`foto${i}`);
+                const descripcionElement = document.getElementById(`descripcion${i}`);
+                
+                if (fotoElement && params[`foto${i}`]) {
+                    setElementContent(fotoElement, params[`foto${i}`]);
+                }
+                if (descripcionElement && params[`descripcion${i}`]) {
+                    setElementContent(descripcionElement, params[`descripcion${i}`]);
+                }
+            }
+            
+            // Poblar firmas
+            const tecnicoElement = document.getElementById('nombreTecnico');
+            const encargadoElement = document.getElementById('nombreEncargado');
+            
+            if (tecnicoElement && params.nombreTecnico) {
+                setElementContent(tecnicoElement, params.nombreTecnico);
+            }
+            if (encargadoElement && params.nombreEncargado) {
+                setElementContent(encargadoElement, params.nombreEncargado);
+            }
+            
+        } catch (e) {
+            console.error('Error al poblar los campos:', e);
         }
+    }
 
-        // Execute when the page loads
-        window.addEventListener('load', populateFields);
-    </script>
+    // Ejecutar cuando la página carga
+    window.addEventListener('load', populateFields);
+</script>
 </body>
 </html>
