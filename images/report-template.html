@@ -27,6 +27,22 @@
             margin: 20px auto;
             padding: 20px;
             background-color: #f5f5f5;
+            position: relative;
+        }
+
+        .version-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #0066cc, #004999);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border: 2px solid white;
         }
 
         .container {
@@ -235,6 +251,8 @@
     </style>
 </head>
 <body>
+    <div class="version-badge">Versión: 1.0</div>
+    
     <div class="container">
         <div class="header">
             <h2>Reporte Fotográfico</h2>
@@ -447,6 +465,37 @@ function getUrlParameters() {
     return result;
 }
 
+// Función para convertir fecha de formato M/D/YYYY a DD/MM/YYYY
+function convertDateFormat(dateString) {
+    if (!dateString) return '';
+    
+    try {
+        // Verificar si la fecha ya está en formato DD/MM/YYYY
+        if (dateString.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
+            const parts = dateString.split('/');
+            const month = parseInt(parts[0]);
+            const day = parseInt(parts[1]);
+            const year = parts[2];
+            
+            // Si el primer número es mayor a 12, probablemente ya está en formato DD/MM/YYYY
+            if (parseInt(parts[0]) > 12) {
+                return dateString;
+            }
+            
+            // Convertir de M/D/YYYY a DD/MM/YYYY
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        return dateString;
+    } catch (error) {
+        console.error('Error al convertir fecha:', error);
+        return dateString;
+    }
+}
+
 function populateFields() {
     const params = getUrlParameters();
     
@@ -464,7 +513,11 @@ function populateFields() {
     document.getElementById('numeroId').textContent = handleText(params.numeroId);
     document.getElementById('ordenTrabajo').textContent = handleText(params.ordenTrabajo);
     document.getElementById('correlativo').textContent = handleText(params.correlativo);
-    document.getElementById('fecha').textContent = handleText(params.fecha);
+    
+    // Convertir y mostrar la fecha en formato DD/MM/YYYY
+    const fechaConvertida = convertDateFormat(handleText(params.fecha));
+    document.getElementById('fecha').textContent = fechaConvertida;
+    
     document.getElementById('trabajoRealizadoEn').textContent = handleText(params.trabajoRealizadoEn);
     document.getElementById('tipoMantenimiento').textContent = handleText(params.tipoMantenimiento);
     document.getElementById('descripcionTrabajo').textContent = handleText(params.descripcionTrabajo);
