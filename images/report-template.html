@@ -21,75 +21,12 @@
     <link rel="icon" type="image/x-icon" href="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/favicon.ico">
     
     <style>
-        /* Contenedor principal que permitirá el escalado */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: auto;
-            background-color: #f5f5f5;
-        }
-
-        /* Wrapper para el escalado responsive */
-        .responsive-wrapper {
-            transform-origin: top center;
-            width: 800px; /* Ancho fijo original */
-            margin: 0 auto;
-            transition: transform 0.3s ease;
-        }
-
-        /* Media queries para escalado responsive */
-        @media screen and (max-width: 768px) {
-            .responsive-wrapper {
-                transform: scale(0.8);
-                margin-top: 0;
-            }
-            body {
-                padding: 10px 0;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .responsive-wrapper {
-                transform: scale(0.50);
-                margin-top: 0;
-            }
-            body {
-                padding: 5px 0;
-            }
-        }
-
-        @media screen and (max-width: 360px) {
-            .responsive-wrapper {
-                transform: scale(0.45);
-                margin-top: 0;
-            }
-            body {
-                padding: 5px 0;
-            }
-        }
-
-        /* Estilos originales mantenidos exactamente igual */
         body {
             font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
             background-color: #f5f5f5;
-            position: relative;
-        }
-
-        .version-badge {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(45deg, #0066cc, #004999);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            z-index: 1000;
-            border: 2px solid white;
         }
 
         .container {
@@ -97,7 +34,6 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            margin: 20px;
         }
 
         .header {
@@ -276,168 +212,139 @@
             background-color: #f8f9fa;
             margin-top: 20px;
         }
-
-        .developer-info {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .developer-info a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        .developer-info a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
-    <div class="version-badge">Versión: 1.0</div>
-    
-    <div class="responsive-wrapper">
-        <div class="container">
-            <div class="header">
-                <h2>Reporte Fotográfico</h2>
-                <div class="logo-placeholder">
-                    <img src="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png" alt="Logo" width="75">
-                </div>
+    <div class="container">
+        <div class="header">
+            <h2>Reporte Fotográfico</h2>
+            <div class="logo-placeholder">
+                <img src="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png" alt="Logo" width="75">
             </div>
-            
-            <div class="info-section">
-                <div>
-                    <p><strong>Tienda:</strong> <span id="tienda"></span></p>
-                    <p><strong>Numero de ID:</strong> <span id="numeroId"></span></p>
-                    <p><strong>Orden de Trabajo:</strong> <span id="ordenTrabajo"></span></p>
-                </div>
-                <div>
-                    <p><strong>Correlativo:</strong> <span id="correlativo"></span></p>
-                    <p><strong>Fecha:</strong> <span id="fecha"></span></p>
-                </div>
+        </div>
+        
+        <div class="info-section">
+            <div>
+                <p><strong>Tienda:</strong> <span id="tienda"></span></p>
+                <p><strong>Numero de ID:</strong> <span id="numeroId"></span></p>
+                <p><strong>Orden de Trabajo:</strong> <span id="ordenTrabajo"></span></p>
             </div>
+            <div>
+                <p><strong>Correlativo:</strong> <span id="correlativo"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+            </div>
+        </div>
 
-            <div class="work-details">
-                <table>
-                    <tr>
-                        <th colspan="2">Detalle del trabajo</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Trabajo realizado en:</strong></td>
-                        <td id="trabajoRealizadoEn"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tipo de mantenimiento:</strong></td>
-                        <td id="tipoMantenimiento"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Descripción del trabajo:</strong></td>
-                        <td id="descripcionTrabajo"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Recomendaciones:</strong></td>
-                        <td id="recomendaciones"></td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="container">
-                <h3 class="section-title">Fotografía del reporte de trabajo</h3>
-                <div class="photo-box">
-                    <img id="fotoReporteTrabajo" src="" alt="Fotografía principal">
-                </div>
-            </div>
-
+        <div class="work-details">
             <table>
                 <tr>
-                    <th colspan="2">Repuestos utilizados</th>
+                    <th colspan="2">Detalle del trabajo</th>
                 </tr>
                 <tr>
-                    <th>Cantidad</th>
-                    <th>Nombre del repuesto</th>
+                    <td><strong>Trabajo realizado en:</strong></td>
+                    <td id="trabajoRealizadoEn"></td>
                 </tr>
                 <tr>
-                    <td id="cantidad1"></td>
-                    <td id="repuesto1"></td>
+                    <td><strong>Tipo de mantenimiento:</strong></td>
+                    <td id="tipoMantenimiento"></td>
                 </tr>
                 <tr>
-                    <td id="cantidad2"></td>
-                    <td id="repuesto2"></td>
+                    <td><strong>Descripción del trabajo:</strong></td>
+                    <td id="descripcionTrabajo"></td>
                 </tr>
                 <tr>
-                    <td id="cantidad3"></td>
-                    <td id="repuesto3"></td>
-                </tr>
-                <tr>
-                    <td id="cantidad4"></td>
-                    <td id="repuesto4"></td>
+                    <td><strong>Recomendaciones:</strong></td>
+                    <td id="recomendaciones"></td>
                 </tr>
             </table>
+        </div>
 
-            <h3 class="section-title">Registro fotográfico</h3>
-            <div class="photo-grid">
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto1" src="" alt="Descripción 1">
-                    </div>
-                    <textarea id="descripcion1" class="description-box" readonly></textarea>
-                </div>
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto2" src="" alt="Descripción 2">
-                    </div>
-                    <textarea id="descripcion2" class="description-box" readonly></textarea>
-                </div>
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto3" src="" alt="Descripción 3">
-                    </div>
-                    <textarea id="descripcion3" class="description-box" readonly></textarea>
-                </div>
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto4" src="" alt="Descripción 4">
-                    </div>
-                    <textarea id="descripcion4" class="description-box" readonly></textarea>
-                </div>
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto5" src="" alt="Descripción 5">
-                    </div>
-                    <textarea id="descripcion5" class="description-box" readonly></textarea>
-                </div>
-                <div class="photo-container">
-                    <div class="photo-box">
-                        <img id="foto6" src="" alt="Descripción 6">
-                    </div>
-                    <textarea id="descripcion6" class="description-box" readonly></textarea>
-                </div>
+        <div class="container">
+            <h3 class="section-title">Fotografía del reporte de trabajo</h3>
+            <div class="photo-box">
+                <img id="fotoReporteTrabajo" src="" alt="Fotografía principal">
             </div>
+        </div>
 
-            <div class="signatures">
-                <div class="signature-box">
-                    <p><strong>Nombre del técnico:</strong> <span id="nombreTecnico"></span></p>
-                    <div class="signature-placeholder">Firma</div>
-                </div>
-                <div class="signature-box">
-                    <p><strong>Nombre de encargado PDV:</strong> <span id="nombreEncargado"></span></p>
-                    <div class="signature-placeholder">Firma</div>
-                </div>
-            </div>
+        <table>
+            <tr>
+                <th colspan="2">Repuestos utilizados</th>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <th>Nombre del repuesto</th>
+            </tr>
+            <tr>
+                <td id="cantidad1"></td>
+                <td id="repuesto1"></td>
+            </tr>
+            <tr>
+                <td id="cantidad2"></td>
+                <td id="repuesto2"></td>
+            </tr>
+            <tr>
+                <td id="cantidad3"></td>
+                <td id="repuesto3"></td>
+            </tr>
+            <tr>
+                <td id="cantidad4"></td>
+                <td id="repuesto4"></td>
+            </tr>
+        </table>
 
-            <div class="footer" style="display: flex; justify-content: center; align-items: center;">
-                <img src="https://alex-marroquin.netlify.app/images/ServiciosH2000.jpg" alt="Pie de pagina" style="width: 50%; height: auto;">
+        <h3 class="section-title">Registro fotográfico</h3>
+        <div class="photo-grid">
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto1" src="" alt="Descripción 1">
+                </div>
+                <textarea id="descripcion1" class="description-box" readonly></textarea>
             </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto2" src="" alt="Descripción 2">
+                </div>
+                <textarea id="descripcion2" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto3" src="" alt="Descripción 3">
+                </div>
+                <textarea id="descripcion3" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto4" src="" alt="Descripción 4">
+                </div>
+                <textarea id="descripcion4" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto5" src="" alt="Descripción 5">
+                </div>
+                <textarea id="descripcion5" class="description-box" readonly></textarea>
+            </div>
+            <div class="photo-container">
+                <div class="photo-box">
+                    <img id="foto6" src="" alt="Descripción 6">
+                </div>
+                <textarea id="descripcion6" class="description-box" readonly></textarea>
+            </div>
+        </div>
 
-            <div class="developer-info">
-                <p>Desarrollado por <strong>TECNISERVICIOS H DOS MIL S.A DE C.V.</strong></p>
-                <p>Sitio web: <a href="https://tsh2000.com" target="_blank">tsh2000.com</a></p>
+        <div class="signatures">
+            <div class="signature-box">
+                <p><strong>Nombre del técnico:</strong> <span id="nombreTecnico"></span></p>
+                <div class="signature-placeholder">Firma</div>
             </div>
+            <div class="signature-box">
+                <p><strong>Nombre de encargado PDV:</strong> <span id="nombreEncargado"></span></p>
+                <div class="signature-placeholder">Firma</div>
+            </div>
+        </div>
+
+        <div class="footer" style="display: flex; justify-content: center; align-items: center;">
+        <img src="https://alex-marroquin.netlify.app/images/ServiciosH2000.jpg" alt="Pie de pagina" style="width: 50%; height: auto;">
         </div>
     </div>
 
@@ -515,37 +422,6 @@ function getUrlParameters() {
     return result;
 }
 
-// Función para convertir fecha de formato M/D/YYYY a DD/MM/YYYY
-function convertDateFormat(dateString) {
-    if (!dateString) return '';
-    
-    try {
-        // Verificar si la fecha ya está en formato DD/MM/YYYY
-        if (dateString.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
-            const parts = dateString.split('/');
-            const month = parseInt(parts[0]);
-            const day = parseInt(parts[1]);
-            const year = parts[2];
-            
-            // Si el primer número es mayor a 12, probablemente ya está en formato DD/MM/YYYY
-            if (parseInt(parts[0]) > 12) {
-                return dateString;
-            }
-            
-            // Convertir de M/D/YYYY a DD/MM/YYYY
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            
-            return `${formattedDay}/${formattedMonth}/${year}`;
-        }
-        
-        return dateString;
-    } catch (error) {
-        console.error('Error al convertir fecha:', error);
-        return dateString;
-    }
-}
-
 function populateFields() {
     const params = getUrlParameters();
     
@@ -563,11 +439,7 @@ function populateFields() {
     document.getElementById('numeroId').textContent = handleText(params.numeroId);
     document.getElementById('ordenTrabajo').textContent = handleText(params.ordenTrabajo);
     document.getElementById('correlativo').textContent = handleText(params.correlativo);
-    
-    // Convertir y mostrar la fecha en formato DD/MM/YYYY
-    const fechaConvertida = convertDateFormat(handleText(params.fecha));
-    document.getElementById('fecha').textContent = fechaConvertida;
-    
+    document.getElementById('fecha').textContent = handleText(params.fecha);
     document.getElementById('trabajoRealizadoEn').textContent = handleText(params.trabajoRealizadoEn);
     document.getElementById('tipoMantenimiento').textContent = handleText(params.tipoMantenimiento);
     document.getElementById('descripcionTrabajo').textContent = handleText(params.descripcionTrabajo);
