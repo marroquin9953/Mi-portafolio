@@ -398,30 +398,99 @@
     </div>
 
     <script>
-        // Función para obtener parámetros de la URL
+        // Función para parsear parámetros de URL manualmente para evitar cortar URLs de AppSheet
+        function parseURLParams() {
+            const urlString = window.location.search.substring(1);
+            const params = {};
+            
+            // Dividir por & pero mantener las URLs completas
+            const parts = [];
+            let current = '';
+            let inAppSheetURL = false;
+            
+            for (let i = 0; i < urlString.length; i++) {
+                const char = urlString[i];
+                
+                if (char === '&') {
+                    // Verificar si estamos dentro de una URL de AppSheet
+                    if (current.includes('appsheet.com') && !current.includes('width=')) {
+                        inAppSheetURL = true;
+                    }
+                    
+                    if (inAppSheetURL && current.includes('width=')) {
+                        inAppSheetURL = false;
+                    }
+                    
+                    if (!inAppSheetURL) {
+                        if (current) parts.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                } else {
+                    current += char;
+                }
+            }
+            
+            if (current) parts.push(current);
+            
+            // Procesar cada parte
+            parts.forEach(part => {
+                const equalIndex = part.indexOf('=');
+                if (equalIndex > -1) {
+                    const key = part.substring(0, equalIndex);
+                    const value = decodeURIComponent(part.substring(equalIndex + 1));
+                    params[key] = value;
+                }
+            });
+            
+            return params;
+        }
+        
+        // Función para obtener parámetros de la URL con manejo especial para AppSheet
         function getURLParams() {
-            const urlParams = new URLSearchParams(window.location.search);
+            const params = parseURLParams();
+            
             return {
-                correlativo: urlParams.get('correlativo') || '153',
-                nombre: urlParams.get('nombre') || '',
-                dui: urlParams.get('dui') || '',
-                fecha: urlParams.get('fecha') || '',
-                motivo: urlParams.get('motivo') || '',
-                fechaPermiso: urlParams.get('fechaPermiso') || '',
-                observaciones: urlParams.get('observaciones') || '',
-                pDesc: urlParams.get('pDesc') === 'true',
-                vacac: urlParams.get('vacac') === 'true',
-                pSDesc: urlParams.get('pSDesc') === 'true',
-                firmaSolicitante: urlParams.get('firmaSolicitante') || '',
-                firmaRRHH: urlParams.get('firmaRRHH') || '',
-                firmaAutorizado: urlParams.get('firmaAutorizado') || '',
-                logo: urlParams.get('logo') || 'https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png'
+                correlativo: params.correlativo || '153',
+                nombre: params.nombre || '',
+                dui: params.dui || '',
+                fecha: params.fecha || '',
+                motivo: params.motivo || '',
+                fechaPermiso: params.fechaPermiso || '',
+                observaciones: params.observaciones || '',
+                tipoPermiso: params.tipoPermiso || '', // Nuevo parámetro único
+                firmaSolicitante: params.firmaSolicitante || '',
+                firmaRRHH: params.firmaRRHH || '',
+                firmaAutorizado: params.firmaAutorizado || '',
+                logo: params.logo || 'https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png'
             };
+        }
+        
+        // Función para cargar imagen con manejo de errores
+        function loadImage(imgElement, url) {
+            if (!url) return;
+            
+            console.log('Cargando imagen:', url);
+            
+            imgElement.onload = function() {
+                console.log('Imagen cargada exitosamente:', url);
+                imgElement.style.display = 'block';
+            };
+            
+            imgElement.onerror = function() {
+                console.error('Error al cargar imagen:', url);
+                imgElement.style.display = 'none';
+            };
+            
+            imgElement.src = url;
         }
         
         // Función para llenar el formulario con los datos de la URL
         function fillFormFromURL() {
             const params = getURLParams();
+            
+            console.log('Parámetros parseados:', params);
             
             // Llenar correlativo
             document.getElementById('correlativo').textContent = params.correlativo;
@@ -434,26 +503,36 @@
             document.getElementById('fechaPermiso').value = params.fechaPermiso;
             document.getElementById('observaciones').value = params.observaciones;
             
-            // Llenar checkboxes
-            updateCheckbox('pDesc', params.pDesc);
-            updateCheckbox('vacac', params.vacac);
-            updateCheckbox('pSDesc', params.pSDesc);
+            // Llenar checkboxes basado en tipoPermiso
+            // Primero limpiar todos los checkboxes
+            updateCheckbox('pDesc', false);
+            updateCheckbox('vacac', false);
+            updateCheckbox('pSDesc', false);
             
-            // Llenar imágenes
-            if (params.logo) {
-                document.getElementById('logo').src = params.logo;
+            // Luego marcar el correspondiente según tipoPermiso
+            if (params.tipoPermiso) {
+                const tipo = params.tipoPermiso.toUpperCase();
+                if (tipo === 'P DESC' || tipo === 'PDESC') {
+                    updateCheckbox('pDesc', true);
+                } else if (tipo === 'VACAC' || tipo === 'VACAC.') {
+                    updateCheckbox('vacac', true);
+                } else if (tipo === 'P S/DESC' || tipo === 'PS/DESC' || tipo === 'PSDESC') {
+                    updateCheckbox('pSDesc', true);
+                }
             }
             
+            // Llenar logo
+            if (params.logo) {
+                loadImage(document.getElementById('logo'), params.logo);
+            }
+            
+            // Llenar firmas
             if (params.firmaSolicitante) {
-                const firmaSolicitante = document.getElementById('firmaSolicitante');
-                firmaSolicitante.src = params.firmaSolicitante;
-                firmaSolicitante.style.display = 'block';
+                loadImage(document.getElementById('firmaSolicitante'), params.firmaSolicitante);
             }
             
             if (params.firmaRRHH) {
-                const firmaRRHH = document.getElementById('firmaRRHH');
-                firmaRRHH.src = params.firmaRRHH;
-                firmaRRHH.style.display = 'block';
+                loadImage(document.getElementById('firmaRRHH'), params.firmaRRHH);
             }
             
             // Llenar sello de autorización
@@ -461,10 +540,14 @@
                 const firmaAutorizado = document.getElementById('firmaAutorizado');
                 if (params.firmaAutorizado.toLowerCase() === 'autorizado') {
                     firmaAutorizado.src = 'https://i.ibb.co/s9Rm34YB/Chat-GPT-Image-22-jun-2025-04-21-43-p-m.png';
+                    firmaAutorizado.style.display = 'block';
                 } else if (params.firmaAutorizado.toLowerCase() === 'rechazado') {
                     firmaAutorizado.src = 'https://i.ibb.co/tMG3qYBw/Chat-GPT-Image-22-jun-2025-04-27-39-p-m.png';
+                    firmaAutorizado.style.display = 'block';
+                } else {
+                    // Si no es 'autorizado' o 'rechazado', tratarlo como URL de imagen
+                    loadImage(firmaAutorizado, params.firmaAutorizado);
                 }
-                firmaAutorizado.style.display = 'block';
             }
         }
         
@@ -507,11 +590,6 @@
             }
         }
         
-        // Manejar errores de carga de imágenes
-        function handleImageError(img) {
-            img.style.display = 'none';
-        }
-        
         // Ejecutar cuando la página se carga
         document.addEventListener('DOMContentLoaded', function() {
             fillFormFromURL();
@@ -541,23 +619,6 @@
                     updateCheckbox(id, newState);
                 });
             });
-            
-            // Manejar errores de carga de imágenes
-            document.getElementById('logo').addEventListener('error', function() {
-                this.style.display = 'none';
-            });
-            
-            document.getElementById('firmaSolicitante').addEventListener('error', function() {
-                handleImageError(this);
-            });
-            
-            document.getElementById('firmaRRHH').addEventListener('error', function() {
-                handleImageError(this);
-            });
-            
-            document.getElementById('firmaAutorizado').addEventListener('error', function() {
-                handleImageError(this);
-            });
         });
         
         // Función para generar URL con los datos actuales del formulario
@@ -581,9 +642,10 @@
             if (fechaPermiso) params.set('fechaPermiso', fechaPermiso);
             if (observaciones) params.set('observaciones', observaciones);
             
-            if (document.getElementById('pDesc').checked) params.set('pDesc', 'true');
-            if (document.getElementById('vacac').checked) params.set('vacac', 'true');
-            if (document.getElementById('pSDesc').checked) params.set('pSDesc', 'true');
+            // Determinar el tipo de permiso seleccionado
+            if (document.getElementById('pDesc').checked) params.set('tipoPermiso', 'P DESC');
+            if (document.getElementById('vacac').checked) params.set('tipoPermiso', 'VACAC');
+            if (document.getElementById('pSDesc').checked) params.set('tipoPermiso', 'P S/DESC');
             
             return baseURL + '?' + params.toString();
         }
