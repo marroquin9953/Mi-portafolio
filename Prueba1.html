@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Fotográfico - Tecniservicios H2000</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Sistema de reportes fotográficos para mantenimiento y servicios técnicos - Tecniservicios H2000">
+    <meta name="keywords" content="reporte fotográfico, mantenimiento, servicios técnicos, tecniservicios h2000">
+    <meta name="author" content="Ing. Isidro Marroquín - TECNISERVICIOS H DOS MIL S.A DE C.V.">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Reporte Fotográfico - Tecniservicios H2000">
+    <meta property="og:description" content="Sistema de reportes fotográficos para mantenimiento y servicios técnicos">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tsh2000.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/favicon.ico">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #ffffff, #f0f8ff);
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #0066cc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #87CEEB;
+            text-align: left;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .work-details {
+            border: 2px solid #0066cc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            background-color: #87CEEB;
+            color: #2c3e50;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 300px;
+            border: 2px dashed #0066cc;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .photo-box {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #0066cc;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .photo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .photo-box:hover {
+            background-color: #e9ecef;
+            border-color: #004999;
+        }
+
+        .description-box {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: white;
+            min-height: 60px;
+            resize: vertical;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .signature-box {
+            width: 45%;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .signature-placeholder {
+            width: 100%;
+            height: 80px;
+            border: 2px dashed #0066cc;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            min-height: 50px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .repuesto-row {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .repuesto-cantidad {
+            width: 50px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Reporte Fotográfico</h2>
+            <div class="logo-placeholder">
+                <img src="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/logo_new.png" alt="Logo" width="75">
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div>
+                <p><strong>Tienda:</strong> <span id="tienda"></span></p>
+                <p><strong>Numero de ID:</strong> <span id="numeroId"></span></p>
+                <p><strong>Orden de Trabajo:</strong> <span id="ordenTrabajo"></span></p>
+            </div>
+            <div>
+                <p><strong>Correlativo:</strong> <span id="correlativo"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+            </div>
+        </div>
+
+        <div class="work-details">
+            <table>
+                <tr>
+                    <th colspan="2">Detalle del trabajo</th>
+                </tr>
+                <tr>
+                    <td><strong>Trabajo realizado en:</strong></td>
+                    <td id="trabajoRealizadoEn"></td>
+                </tr>
+                <tr>
+                    <td><strong>Tipo de mantenimiento:</strong></td>
+                    <td id="tipoMantenimiento"></td>
+                </tr>
+                <tr>
+                    <td><strong>Descripción del trabajo:</strong></td>
+                    <td id="descripcionTrabajo"></td>
+                </tr>
+                <tr>
+                    <td><strong>Recomendaciones:</strong></td>
+                    <td id="recomendaciones"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="container" id="foto-reporte-section">
+            <h3 class="section-title">Fotografía del reporte de trabajo</h3>
+            <div class="photo-box">
+                <img id="fotoReporteTrabajo" src="" alt="Fotografía principal">
+            </div>
+        </div>
+
+        <div id="repuestos-section">
+            <h3 class="section-title">Repuestos utilizados</h3>
+            <div id="repuestos-container"></div>
+        </div>
+
+        <div id="fotos-evidencias-section">
+            <h3 class="section-title">Registro fotográfico</h3>
+            <div class="photo-grid" id="fotos-grid"></div>
+        </div>
+
+        <div class="signatures">
+            <div class="signature-box">
+                <p><strong>Nombre del técnico:</strong> <span id="nombreTecnico"></span></p>
+                <div class="signature-placeholder">Firma</div>
+            </div>
+            <div class="signature-box">
+                <p><strong>Nombre de encargado PDV:</strong> <span id="nombreEncargado"></span></p>
+                <div class="signature-placeholder">Firma</div>
+            </div>
+        </div>
+
+        <div class="footer" style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://alex-marroquin.netlify.app/images/ServiciosH2000.jpg" alt="Pie de pagina" style="width: 50%; height: auto;">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener el ID del reporte de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const reportId = urlParams.get('id');
+            
+            if (!reportId) {
+                alert('No se ha especificado un ID de reporte');
+                return;
+            }
+
+            // Solución para el problema de CORS usando un proxy
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const apiUrl = `http://34.55.139.194/API-ReportesPDF-TSH/consultar_reporte.php?id=${reportId}`;
+            
+            fetch(proxyUrl + apiUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener el reporte');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'error') {
+                    alert(data.message);
+                    return;
+                }
+                
+                // Limpiar los placeholders del JSON
+                const cleanData = cleanJsonPlaceholders(data);
+                
+                // Llenar los datos del reporte
+                populateReportData(cleanData);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al cargar el reporte. Intente recargar la página.');
+                // Intentar sin proxy si falla
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        const cleanData = cleanJsonPlaceholders(data);
+                        populateReportData(cleanData);
+                    })
+                    .catch(err => console.error('Error sin proxy:', err));
+            });
+        });
+
+        function cleanJsonPlaceholders(data) {
+            // Función para limpiar los placeholders <<[_THISROW].[campo]>>
+            const cleanData = {};
+            for (const key in data) {
+                if (typeof data[key] === 'string' && data[key].startsWith('<<[_THISROW].[') && data[key].endsWith(']>>')) {
+                    cleanData[key] = ''; // Si es un placeholder, lo dejamos vacío
+                } else {
+                    cleanData[key] = data[key]; // Si no, conservamos el valor
+                }
+            }
+            return cleanData;
+        }
+
+        function populateReportData(reportData) {
+            // Información general
+            document.getElementById('tienda').textContent = reportData.Tienda || 'N/A';
+            document.getElementById('numeroId').textContent = reportData.Numero_ID || 'N/A';
+            document.getElementById('ordenTrabajo').textContent = reportData.Orden_Trabajo || 'N/A';
+            document.getElementById('correlativo').textContent = reportData.ID || 'N/A';
+            document.getElementById('fecha').textContent = reportData.Fecha || 'N/A';
+            document.getElementById('trabajoRealizadoEn').textContent = reportData.TrabajoRealizadoEn || 'N/A';
+            document.getElementById('tipoMantenimiento').textContent = reportData.TipoMantenimiento || 'N/A';
+            document.getElementById('descripcionTrabajo').textContent = reportData.DescripcionTrabajo || 'N/A';
+            document.getElementById('recomendaciones').textContent = reportData.Recomendaciones || 'N/A';
+
+            // Foto del reporte de trabajo
+            if (reportData.FotoReporteTrabajo) {
+                document.getElementById('fotoReporteTrabajo').src = reportData.FotoReporteTrabajo;
+            } else {
+                document.getElementById('foto-reporte-section').classList.add('hidden');
+            }
+
+            // Repuestos utilizados
+            const repuestosContainer = document.getElementById('repuestos-container');
+            let hasRepuestos = false;
+            
+            // Limpiar el contenedor primero
+            repuestosContainer.innerHTML = '';
+            
+            for (let i = 1; i <= 8; i++) {
+                const cantidad = reportData[`Cantidad${i}`];
+                const repuesto = reportData[`Repuesto${i}`];
+                
+                if (cantidad || repuesto) {
+                    hasRepuestos = true;
+                    const repuestoItem = document.createElement('div');
+                    repuestoItem.className = 'repuesto-row';
+                    repuestoItem.innerHTML = `
+                        <div class="repuesto-cantidad">${cantidad || ''}</div>
+                        <div>${repuesto || ''}</div>
+                    `;
+                    repuestosContainer.appendChild(repuestoItem);
+                }
+            }
+            
+            if (!hasRepuestos) {
+                document.getElementById('repuestos-section').classList.add('hidden');
+            }
+
+            // Fotos de evidencias
+            const fotosGrid = document.getElementById('fotos-grid');
+            let hasFotos = false;
+            
+            // Limpiar el grid primero
+            fotosGrid.innerHTML = '';
+            
+            // Mostrar hasta 35 fotos (como en el JSON)
+            for (let i = 1; i <= 35; i++) {
+                const foto = reportData[`Foto${i}`];
+                const descripcion = reportData[`Descripcion${i}`];
+                
+                if (foto) {
+                    hasFotos = true;
+                    const photoContainer = document.createElement('div');
+                    photoContainer.className = 'photo-container';
+                    photoContainer.innerHTML = `
+                        <div class="photo-box">
+                            <img src="${foto}" alt="Evidencia ${i}">
+                        </div>
+                        <textarea class="description-box" readonly>${descripcion || ''}</textarea>
+                    `;
+                    fotosGrid.appendChild(photoContainer);
+                }
+            }
+            
+            if (!hasFotos) {
+                document.getElementById('fotos-evidencias-section').classList.add('hidden');
+            }
+
+            // Firmas
+            document.getElementById('nombreTecnico').textContent = reportData.NombreTecnico || 'N/A';
+            document.getElementById('nombreEncargado').textContent = reportData.NombreEncargado || 'N/A';
+        }
+    </script>
+</body>
+</html>
