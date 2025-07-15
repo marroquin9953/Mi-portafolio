@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Fotográfico - Depuración de Carga</title>
+
+    <meta name="description" content="Sistema de reportes fotográficos para mantenimiento y servicios técnicos - Tecniservicios H2000">
+    <meta name="keywords" content="reporte fotográfico, mantenimiento, servicios técnicos, tecniservicios h2000">
+    <meta name="author" content="Ing. Isidro Marroquín - TECNISERVICIOS H DOS MIL S.A DE C.V.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <meta property="og:title" content="Reporte Fotográfico - Tecniservicios H2000">
+    <meta property="og:description" content="Sistema de reportes fotográficos para mantenimiento y servicios técnicos">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tsh2000.com">
+
+    <link rel="icon" type="image/x-icon" href="https://www.tecniserviciosh2000.com/web/wp-content/uploads/2017/06/favicon.ico">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+        }
+        .header-info, .section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        .header-info div, .section p {
+            margin-bottom: 5px;
+        }
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .photo-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .photo-box {
+            width: 100%;
+            height: 150px; /* Altura fija para las fotos */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .photo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            object-fit: contain; /* Asegura que la imagen se ajuste dentro del contenedor */
+        }
+        .description-box {
+            width: calc(100% - 10px); /* Ajusta el ancho para el padding */
+            min-height: 60px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+            resize: vertical; /* Permite redimensionar verticalmente */
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .signature-area {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        .signature-box {
+            text-align: center;
+            width: 45%;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            margin-top: 50px;
+            margin-bottom: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+            .no-print {
+                display: none;
+            }
+            .debug-logs-section { /* Oculta los logs al imprimir */
+                display: none;
+            }
+        }
+
+        /* Estilos para la sección de depuración */
+        .debug-logs-section {
+            border: 2px solid #007bff;
+            padding: 15px;
+            margin-top: 30px;
+            background-color: #eaf6ff;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .debug-logs-section h2 {
+            text-align: left;
+            color: #007bff;
+            margin-top: 0;
+        }
+        .debug-logs-section pre {
+            white-space: pre-wrap; /* Permite que el texto se ajuste */
+            word-wrap: break-word;
+            margin: 0;
+            max-height: 300px; /* Para que no ocupe demasiado espacio */
+            overflow-y: auto; /* Scroll si hay muchos logs */
+        }
+        .log-entry {
+            border-bottom: 1px dashed #a0d3ff;
+            padding: 5px 0;
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte Fotográfico de Mantenimiento</h1>
+
+    <div id="debug-logs-section" class="debug-logs-section no-print">
+        <h2>Logs de Carga (Depuración Visual)</h2>
+        <pre id="debug-logs"></pre>
+    </div>
+
+    <div class="header-info">
+        <div><strong>ID del Reporte:</strong> <span id="report-id">Cargando...</span></div>
+        <div><strong>Tienda:</strong> <span id="store-name">Cargando...</span></div>
+        <div><strong>Número de Identificación:</strong> <span id="identification-number">Cargando...</span></div>
+        <div><strong>Orden de Trabajo:</strong> <span id="work-order">Cargando...</span></div>
+        <div><strong>Fecha:</strong> <span id="report-date">Cargando...</span></div>
+        <div><strong>Trabajo Realizado En:</strong> <span id="work-location">Cargando...</span></div>
+        <div><strong>Tipo de Mantenimiento:</strong> <span id="maintenance-type">Cargando...</span></div>
+    </div>
+
+    <div class="section">
+        <h3>Descripción del Trabajo Realizado</h3>
+        <p id="work-description">Cargando...</p>
+    </div>
+
+    <div class="section">
+        <h3>Recomendaciones</h3>
+        <p id="recommendations">Cargando...</p>
+    </div>
+
+    <div class="section" id="parts-section">
+        <h3>Repuestos Utilizados</h3>
+        <ul id="parts-list">
+            <li>Cargando repuestos...</li>
+        </ul>
+    </div>
+
+    <div class="section" id="fotos-evidencias-section">
+        <h3>Fotos de Evidencias</h3>
+        <div class="photos-grid" id="fotos-grid">
+            <p>Cargando fotos...</p>
+        </div>
+    </div>
+
+    <div class="signature-area">
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <p><span id="nombreTecnico">Cargando...</span></p>
+            <p>Nombre del Técnico</p>
+        </div>
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <p><span id="nombreEncargado">Cargando...</span></p>
+            <p>Nombre del Encargado</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const debugLogsDiv = document.getElementById('debug-logs');
+            const loadStartTime = performance.now();
+
+            function logToPage(message, data = {}) {
+                const now = performance.now();
+                const totalDuration = (now - loadStartTime).toFixed(2);
+                let logMessage = `[${totalDuration}ms] ${message}`;
+                if (data.duration) {
+                    logMessage += ` (Duración: ${data.duration}ms)`;
+                }
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.textContent = logMessage;
+                debugLogsDiv.appendChild(entry);
+                debugLogsDiv.scrollTop = debugLogsDiv.scrollHeight; // Auto-scroll
+                console.log(`CLIENT_LOG: ${logMessage}`, data); // Mantener logs en consola
+            }
+
+            logToPage('DOMContentLoaded - HTML principal cargado.', { time: loadStartTime.toFixed(2) });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const reportId = urlParams.get('id');
+
+            if (!reportId) {
+                logToPage('Error: ID del reporte no proporcionado en la URL.');
+                document.getElementById('report-id').textContent = 'ID no encontrado';
+                // Ocultar secciones si no hay datos para cargar
+                document.getElementById('parts-section').classList.add('hidden');
+                document.getElementById('fotos-evidencias-section').classList.add('hidden');
+                return;
+            }
+
+            // URL de tu API de consulta de reportes - Actualizada con la URL proporcionada
+            const reportApiUrl = `http://34.55.139.194/API-ReportesPDF-TSH/consultar_reporte.php?id=${reportId}`;
+
+
+            fetch(reportApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(reportData => {
+                    const dataReceivedTime = performance.now();
+                    logToPage('Datos del reporte recibidos y procesados desde la API.', {
+                        time: dataReceivedTime.toFixed(2),
+                        duration: (dataReceivedTime - loadStartTime).toFixed(2)
+                    });
+
+                    // Actualizar información del encabezado
+                    document.getElementById('report-id').textContent = reportData.Numero_ID || 'N/A';
+                    document.getElementById('store-name').textContent = reportData.Tienda || 'N/A';
+                    document.getElementById('identification-number').textContent = reportData.Numero_ID || 'N/A';
+                    document.getElementById('work-order').textContent = reportData.Orden_Trabajo || 'N/A';
+                    document.getElementById('report-date').textContent = reportData.Fecha || 'N/A';
+                    document.getElementById('work-location').textContent = reportData.TrabajoRealizadoEn || 'N/A';
+                    document.getElementById('maintenance-type').textContent = reportData.TipoMantenimiento || 'N/A';
+
+                    // Actualizar descripción y recomendaciones
+                    document.getElementById('work-description').textContent = reportData.DescripcionTrabajo || 'Sin descripción.';
+                    document.getElementById('recommendations').textContent = reportData.Recomendaciones || 'Sin recomendaciones.';
+
+                    // Repuestos Utilizados
+                    const partsList = document.getElementById('parts-list');
+                    partsList.innerHTML = ''; // Limpiar lista
+                    let hasParts = false;
+                    for (let i = 1; i <= 8; i++) {
+                        const cantidad = reportData[`Cantidad${i}`];
+                        const repuesto = reportData[`Repuesto${i}`];
+                        if (cantidad && repuesto) {
+                            const li = document.createElement('li');
+                            li.textContent = `${cantidad} - ${repuesto}`;
+                            partsList.appendChild(li);
+                            hasParts = true;
+                        }
+                    }
+                    if (!hasParts) {
+                        partsList.innerHTML = '<li>No se utilizaron repuestos.</li>';
+                        document.getElementById('parts-section').classList.add('hidden');
+                    }
+
+                    // Fotos de evidencias
+                    const fotosGrid = document.getElementById('fotos-grid');
+                    fotosGrid.innerHTML = ''; // Limpiar el grid primero
+                    const imagePromises = [];
+                    let hasFotos = false;
+
+                    for (let i = 1; i <= 35; i++) {
+                        const foto = reportData[`Foto${i}`];
+                        const descripcion = reportData[`Descripcion${i}`];
+
+                        if (foto) {
+                            hasFotos = true;
+                            const photoContainer = document.createElement('div');
+                            photoContainer.className = 'photo-container';
+                            photoContainer.innerHTML = `
+                                <div class="photo-box">
+                                    <img src="${foto}" alt="Evidencia ${i}">
+                                </div>
+                                <textarea class="description-box" readonly>${descripcion || ''}</textarea>
+                            `;
+                            fotosGrid.appendChild(photoContainer);
+
+                            // Crear una promesa para cada imagen para saber cuándo carga
+                            imagePromises.push(new Promise((resolve) => {
+                                const imgElement = photoContainer.querySelector('img');
+                                if (imgElement.complete) { // Si la imagen ya está en caché
+                                    logToPage(`Imagen Foto${i} (cached): ${foto.substring(foto.lastIndexOf('/') + 1)} cargada.`);
+                                    resolve();
+                                } else {
+                                    imgElement.onload = () => {
+                                        logToPage(`Imagen Foto${i} cargada: ${foto.substring(foto.lastIndexOf('/') + 1)}`, { time: performance.now().toFixed(2) });
+                                        resolve();
+                                    };
+                                    imgElement.onerror = () => {
+                                        logToPage(`Error al cargar Imagen Foto${i}: ${foto}`, { time: performance.now().toFixed(2) });
+                                        resolve(); // Resolver para que Promise.all no se bloquee
+                                    };
+                                }
+                            }));
+                        }
+                    }
+
+                    if (!hasFotos) {
+                        document.getElementById('fotos-evidencias-section').classList.add('hidden');
+                    } else {
+                        // Esperar a que todas las imágenes se carguen
+                        Promise.all(imagePromises)
+                            .then(() => {
+                                const allImagesLoadedTime = performance.now();
+                                logToPage('TODAS las imágenes (dinámicas) han terminado de cargar.', {
+                                    time: allImagesLoadedTime.toFixed(2),
+                                    duration: (allImagesLoadedTime - dataReceivedTime).toFixed(2)
+                                });
+                                // Este es el punto donde todo debería estar visible
+                                logToPage('Página completamente cargada y renderizada.', {
+                                    time: allImagesLoadedTime.toFixed(2),
+                                    totalDuration: (allImagesLoadedTime - loadStartTime).toFixed(2)
+                                });
+                            })
+                            .catch(error => {
+                                logToPage(`Error en Promise.all de imágenes: ${error.message}`);
+                            });
+                    }
+
+                    // Firmas
+                    document.getElementById('nombreTecnico').textContent = reportData.NombreTecnico || 'N/A';
+                    document.getElementById('nombreEncargado').textContent = reportData.NombreEncargado || 'N/A';
+
+                })
+                .catch(error => {
+                    logToPage(`Error al obtener datos del reporte: ${error.message}`);
+                    // Mostrar errores en la página
+                    document.getElementById('report-id').textContent = `Error: ${error.message}`;
+                    document.getElementById('store-name').textContent = '';
+                    document.getElementById('work-description').textContent = 'No se pudieron cargar los datos del reporte. Por favor, verifica el ID y la conexión a la API.';
+                    document.getElementById('recommendations').textContent = '';
+                    document.getElementById('parts-section').classList.add('hidden');
+                    document.getElementById('fotos-evidencias-section').classList.add('hidden');
+                });
+        });
+    </script>
+</body>
+</html>
