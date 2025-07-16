@@ -307,7 +307,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Obtener el ID del reporte de la URL
             const urlParams = new URLSearchParams(window.location.search);
             const reportId = urlParams.get('id');
@@ -317,55 +317,56 @@
                 return;
             }
 
-            // Solución para el problema de CORS usando un proxy
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            try {
+                // Intentar primero con conexión directa (si el servidor ya tiene CORS configurado)
+                const data = await fetchReportData(reportId);
+                const cleanData = cleanJsonPlaceholders(data);
+                populateReportData(cleanData);
+            } catch (error) {
+                console.error('Error al cargar el reporte:', error);
+                alert('No se pudo cargar el reporte. Por favor verifique:\n\n1. Que el servidor API tenga CORS configurado\n2. Que esté accesible desde esta ubicación');
+            }
+        });
+
+        async function fetchReportData(reportId) {
             const apiUrl = `http://34.55.139.194/API-ReportesPDF-TSH/consultar_reporte.php?id=${reportId}`;
             
-            fetch(proxyUrl + apiUrl, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
+            // Opción 1: Intentar con proxy alternativo
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(apiUrl);
+                const response = await fetch(proxyUrl);
+                
+                if (!response.ok) throw new Error('Error con proxy');
+                
+                const data = await response.json();
+                return JSON.parse(data.contents); // El proxy allOrigins devuelve los datos en .contents
+            } catch (proxyError) {
+                console.log('Proxy alternativo falló, intentando conexión directa');
+                
+                // Opción 2: Intentar conexión directa
+                const response = await fetch(apiUrl, {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
                 if (!response.ok) {
-                    throw new Error('Error al obtener el reporte');
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
+                
                 return response.json();
-            })
-            .then(data => {
-                if (data.status === 'error') {
-                    alert(data.message);
-                    return;
-                }
-                
-                // Limpiar los placeholders del JSON
-                const cleanData = cleanJsonPlaceholders(data);
-                
-                // Llenar los datos del reporte
-                populateReportData(cleanData);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ocurrió un error al cargar el reporte. Intente recargar la página.');
-                // Intentar sin proxy si falla
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        const cleanData = cleanJsonPlaceholders(data);
-                        populateReportData(cleanData);
-                    })
-                    .catch(err => console.error('Error sin proxy:', err));
-            });
-        });
+            }
+        }
 
         function cleanJsonPlaceholders(data) {
             // Función para limpiar los placeholders <<[_THISROW].[campo]>>
             const cleanData = {};
             for (const key in data) {
                 if (typeof data[key] === 'string' && data[key].startsWith('<<[_THISROW].[') && data[key].endsWith(']>>')) {
-                    cleanData[key] = ''; // Si es un placeholder, lo dejamos vacío
+                    cleanData[key] = '';
                 } else {
-                    cleanData[key] = data[key]; // Si no, conservamos el valor
+                    cleanData[key] = data[key];
                 }
             }
             return cleanData;
@@ -393,8 +394,6 @@
             // Repuestos utilizados
             const repuestosContainer = document.getElementById('repuestos-container');
             let hasRepuestos = false;
-            
-            // Limpiar el contenedor primero
             repuestosContainer.innerHTML = '';
             
             for (let i = 1; i <= 8; i++) {
@@ -420,11 +419,8 @@
             // Fotos de evidencias
             const fotosGrid = document.getElementById('fotos-grid');
             let hasFotos = false;
-            
-            // Limpiar el grid primero
             fotosGrid.innerHTML = '';
             
-            // Mostrar hasta 35 fotos (como en el JSON)
             for (let i = 1; i <= 35; i++) {
                 const foto = reportData[`Foto${i}`];
                 const descripcion = reportData[`Descripcion${i}`];
