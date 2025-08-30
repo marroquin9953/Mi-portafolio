@@ -98,7 +98,7 @@ function CreateWhatsappChatWidget(option = {
                             </svg>
                         <span class="wa-chat-box-content-send-btn-text">${option.brandSetting.ctaText}</span>
                     </a>
-                    <div class='wa-chat-box-poweredby'>@<a href=https://sararobotics.org/" target="_blank">Marroquin</a></div>
+                    <div class='wa-chat-box-poweredby'>Desarrollador: <a href=https://tsh2000.com/" target="_blank">TSH2000</a></div>
                 </div>
             </div>
         `);
